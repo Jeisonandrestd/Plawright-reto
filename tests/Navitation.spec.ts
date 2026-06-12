@@ -35,8 +35,8 @@ test.describe("Login to HRM", () => {
             'Claim',
             'Buzz'
         ]
-
         expect(currentMenuItems).toEqual(expectedMenuItems)
+        expect(currentMenuItems[0]).toEqual(expectedMenuItems[0])
     })
 
 
