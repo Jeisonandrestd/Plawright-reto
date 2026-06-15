@@ -39,6 +39,24 @@ test.describe("Login to HRM", () => {
         expect(currentMenuItems[0]).toEqual(expectedMenuItems[0])
     })
 
+    test('Navigate through the letf panel', async ({ page }) => {
+        const letfMenuItems = page.getByLabel('Sidepanel').getByRole('listitem') //Capturo todos los items
+        const currentMenuItemsCount = await letfMenuItems.count()//Cuenta cuantas opciones son
+
+        for (let i = 0; i < currentMenuItemsCount; i++) {
+            const menuItem = letfMenuItems.nth(i)//acceder al indice con nth
+            const menuText = await menuItem.innerText() //obtener el texto
+            console.log('Current menu item: ', menuText)
+            if (menuText == 'Maintenance') {
+                await page.goBack() //No da click en Maintenance y regresa la página (Botón atrás)
+            }
+            else{
+                await menuItem.click()
+            }
+
+        }
+    })
+
 
 
 })
