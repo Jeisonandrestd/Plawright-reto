@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe("Login to HRM", () => {
+test.describe("Validation of navigation options", () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('https://opensource-demo.orangehrmlive.com/')
         await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
@@ -47,14 +47,79 @@ test.describe("Login to HRM", () => {
             const menuItem = letfMenuItems.nth(i)//acceder al indice con nth
             const menuText = await menuItem.innerText() //obtener el texto
             console.log('Current menu item: ', menuText)
-            if (menuText == 'Maintenance') {
+            if (menuText === 'Maintenance') {
+                console.log('Se necesitan permisos de administrador. Regresa')
                 await page.goBack() //No da click en Maintenance y regresa la página (Botón atrás)
             }
-            else{
+            else {
                 await menuItem.click()
             }
 
         }
+    })
+
+    test('check all the qualification links', async({page})=>{
+        //Establece en variable como array el menú y el Path de la URL que debe tener
+        const expectPages =[
+            {
+                menu: 'Skills',
+                url: 'web/index.php/admin/viewSkills'
+            },
+            {
+                menu: 'Education',
+                url: 'web/index.php/admin/viewEducation'
+            },
+            {
+                menu: 'Licenses',
+                url: 'web/index.php/admin/viewLicenses'
+            }
+        ]
+        await page.getByRole('link', { name: 'Admin' }).click()
+         //Buscar Qualifications en el topbar menú
+        await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Qualifications').click()
+        //Click en la opción user del menú
+        const qualificationOptions = page.getByRole('menu').locator('li')//Todos los li a la variable
+
+        for (let expectedPage of expectPages){ //por cada pagina en el array
+            //Filtra cada valor del array que tenga el coincida con el indice menu
+            const menuOption = qualificationOptions.filter({hasText: expectedPage.menu}) //coincide por texto
+            await menuOption.click() //click en la opción
+            await expect(page).toHaveURL(new RegExp(expectedPage.url)) //verifica que la página tenga en su URL el path esperado
+            await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Qualifications').click()//Da click porque al cargar, se cierran las opciones del TopBar menu
+        }
+    
+    })
+
+    test('check all the Job links', async({page})=>{
+        //Establece en variable como array el menú y el Path de la URL que debe tener
+        const expectPages =[
+            {
+                menu: 'Job Titles',
+                url: 'web/index.php/admin/viewJobTitleList'
+            },
+            {
+                menu: 'Pay Grades',
+                url: 'web/index.php/admin/viewPayGrades'
+            },
+            {
+                menu: 'Employment Status',
+                url: 'web/index.php/admin/employmentStatus'
+            }
+        ]
+        await page.getByRole('link', { name: 'Admin' }).click()
+         //Buscar Qualifications en el topbar menú
+        await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Job').click()
+        //Click en la opción user del menú
+        const qualificationOptions = page.getByRole('menu').locator('li')//Todos los li a la variable
+
+        for (let expectedPage of expectPages){ //por cada pagina en el array
+            //Filtra cada valor del array que tenga el coincida con el indice menu
+            const menuOption = qualificationOptions.filter({hasText: expectedPage.menu}) //coincide por texto
+            await menuOption.click() //click en la opción
+            await expect(page).toHaveURL(new RegExp(expectedPage.url)) //verifica que la página tenga en su URL el path esperado
+            await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Job').click()//Da click porque al cargar, se cierran las opciones del TopBar menu
+        }
+    
     })
 
 

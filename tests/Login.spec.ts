@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 //En el test.describe se le indica que para cada test debe hacer el goto(HRM PAGE) primero
-test.describe("Login to HRM", () => { 
+test.describe("Validation of login page", () => { 
     test.beforeEach(async ({ page }) => {
         await page.goto('https://opensource-demo.orangehrmlive.com/')
     })
