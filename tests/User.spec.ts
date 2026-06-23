@@ -4,7 +4,7 @@ import { LoginPage } from '../pageobjects/LoginPage'
 test.describe("Get data from table", () => {
     test.beforeEach(async ({ page }) => {
         const loginPage = new LoginPage(page)
-        await loginPage.doLogin('Admin','admin123')
+        await loginPage.LoginAsAdmin()
         //Comprobar componente en el dashboard para asegurar que ingresó correctamente:
         await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
     })

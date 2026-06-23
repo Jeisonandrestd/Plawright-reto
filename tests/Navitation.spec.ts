@@ -5,7 +5,7 @@ import { SideMenuOption, SidePanel } from '../components/SidePanel'
 test.describe("Validation of navigation options", () => {
     test.beforeEach(async ({ page }) => {
         const loginPage = new LoginPage(page)
-        await loginPage.doLogin('Admin', 'admin123')
+        await loginPage.LoginAsAdmin()
     })
 
     test('Click on the side menu using page objets', async({page})=>{
