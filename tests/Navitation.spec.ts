@@ -1,11 +1,10 @@
 import { test, expect } from '@playwright/test'
+import { LoginPage } from './pageobjects/LoginPage'
 
 test.describe("Validation of navigation options", () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://opensource-demo.orangehrmlive.com/')
-        await page.getByRole('textbox', { name: 'Username' }).fill('Admin')
-        await page.getByRole('textbox', { name: 'Password' }).fill('admin123')
-        await page.getByRole('button', { name: 'Login' }).click()
+        const loginPage = new LoginPage(page)
+        await loginPage.doLogin('Admin', 'admin123')
         //Comprobar componente en el dashboard para asegurar que ingresó correctamente:
         await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
     })
@@ -58,9 +57,9 @@ test.describe("Validation of navigation options", () => {
         }
     })
 
-    test('check all the qualification links', async({page})=>{
+    test('check all the qualification links', async ({ page }) => {
         //Establece en variable como array el menú y el Path de la URL que debe tener
-        const expectPages =[
+        const expectPages = [
             {
                 menu: 'Skills',
                 url: 'web/index.php/admin/viewSkills'
@@ -75,24 +74,24 @@ test.describe("Validation of navigation options", () => {
             }
         ]
         await page.getByRole('link', { name: 'Admin' }).click()
-         //Buscar Qualifications en el topbar menú
+        //Buscar Qualifications en el topbar menú
         await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Qualifications').click()
         //Click en la opción user del menú
         const qualificationOptions = page.getByRole('menu').locator('li')//Todos los li a la variable
 
-        for (let expectedPage of expectPages){ //por cada pagina en el array
+        for (let expectedPage of expectPages) { //por cada pagina en el array
             //Filtra cada valor del array que tenga el coincida con el indice menu
-            const menuOption = qualificationOptions.filter({hasText: expectedPage.menu}) //coincide por texto
+            const menuOption = qualificationOptions.filter({ hasText: expectedPage.menu }) //coincide por texto
             await menuOption.click() //click en la opción
             await expect(page).toHaveURL(new RegExp(expectedPage.url)) //verifica que la página tenga en su URL el path esperado
             await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Qualifications').click()//Da click porque al cargar, se cierran las opciones del TopBar menu
         }
-    
+
     })
 
-    test('check all the Job links', async({page})=>{
+    test('check all the Job links', async ({ page }) => {
         //Establece en variable como array el menú y el Path de la URL que debe tener
-        const expectPages =[
+        const expectPages = [
             {
                 menu: 'Job Titles',
                 url: 'web/index.php/admin/viewJobTitleList'
@@ -107,19 +106,19 @@ test.describe("Validation of navigation options", () => {
             }
         ]
         await page.getByRole('link', { name: 'Admin' }).click()
-         //Buscar Qualifications en el topbar menú
+        //Buscar Qualifications en el topbar menú
         await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Job').click()
         //Click en la opción user del menú
         const qualificationOptions = page.getByRole('menu').locator('li')//Todos los li a la variable
 
-        for (let expectedPage of expectPages){ //por cada pagina en el array
+        for (let expectedPage of expectPages) { //por cada pagina en el array
             //Filtra cada valor del array que tenga el coincida con el indice menu
-            const menuOption = qualificationOptions.filter({hasText: expectedPage.menu}) //coincide por texto
+            const menuOption = qualificationOptions.filter({ hasText: expectedPage.menu }) //coincide por texto
             await menuOption.click() //click en la opción
             await expect(page).toHaveURL(new RegExp(expectedPage.url)) //verifica que la página tenga en su URL el path esperado
             await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Job').click()//Da click porque al cargar, se cierran las opciones del TopBar menu
         }
-    
+
     })
 
 
