@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { LoginPage } from './pageobjects/LoginPage'
+import { LoginPage } from '../pageobjects/LoginPage'
 
 test.describe("Get data from table", () => {
     test.beforeEach(async ({ page }) => {

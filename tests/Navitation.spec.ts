@@ -1,12 +1,25 @@
 import { test, expect } from '@playwright/test'
-import { LoginPage } from './pageobjects/LoginPage'
+import { LoginPage } from '../pageobjects/LoginPage'
+import { SideMenuOption, SidePanel } from '../components/SidePanel'
 
 test.describe("Validation of navigation options", () => {
     test.beforeEach(async ({ page }) => {
         const loginPage = new LoginPage(page)
         await loginPage.doLogin('Admin', 'admin123')
-        //Comprobar componente en el dashboard para asegurar que ingresó correctamente:
-        await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
+    })
+
+    test('Click on the side menu using page objets', async({page})=>{
+        const sidePanel= new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+        await sidePanel.clickOnOption(SideMenuOption.BUZZ)
+        await sidePanel.clickOnOption(SideMenuOption.PERFORMANCE)
+    })
+
+    test('Filter on the side menu using page objets', async({page})=>{
+        const sidePanel= new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+        await sidePanel.filterBy(SideMenuOption.BUZZ)
+        await sidePanel.IsVisibleOption(SideMenuOption.BUZZ)
     })
 
     test('Get left menu options', async ({ page }) => {
