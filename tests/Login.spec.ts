@@ -1,8 +1,16 @@
 import { expect, test } from '@playwright/test'
+import { LoginPage } from '../pageobjects/LoginPage'
 //En el test.describe se le indica que para cada test debe hacer el goto(HRM PAGE) primero
 test.describe("Validation of login page", () => { 
     test.beforeEach(async ({ page }) => {
         await page.goto('https://opensource-demo.orangehrmlive.com/')
+    })
+
+    test('Do login as an employee', async({page})=>{
+        const login = new LoginPage(page)
+        await login.LoginAsEmployee()
+        //Comprobar que no existe Admin en el SidePanel
+        await expect(page.getByRole('link', { name: 'Admin' })).not.toBeVisible()
     })
 
     test('Succesful login', async ({ page }) => {

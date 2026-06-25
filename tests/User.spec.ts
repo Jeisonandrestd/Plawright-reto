@@ -9,6 +9,11 @@ test.describe("Get data from table", () => {
         await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible()
     })
 
+    test('Do logout', async({page})=>{
+        await page.locator('.oxd-userdropdown-tab').click()
+        await page.getByRole('menuitem',{name: 'Logout'}).click()
+    })
+
     test('Get all the usernames registered', async ({ page }) => {
         await page.getByRole('link', { name: 'Admin' }).click()
         //Buscar User Management en el menú
