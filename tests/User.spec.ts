@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pageobjects/LoginPage'
+import { SideMenuOption, SidePanel } from '../components/SidePanel'
 
 test.describe("Get data from table", () => {
     test.beforeEach(async ({ page }) => {
@@ -12,6 +13,34 @@ test.describe("Get data from table", () => {
     test('Do logout', async({page})=>{
         await page.locator('.oxd-userdropdown-tab').click()
         await page.getByRole('menuitem',{name: 'Logout'}).click()
+    })
+
+    test('check user role options', async({page})=>{
+        const sidepanel = new SidePanel(page)
+        await sidepanel.clickOnOption(SideMenuOption.ADMIN) 
+
+        const expectedRoleOptions = ['-- Select --','Admin','ESS']
+        //obtiene el div de selección que se ocultan
+        await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click()
+        //capture todos los options y saque los textos en un arreglo
+        const currentUserRoleOptions = await page.getByRole('listbox').getByRole('option').allInnerTexts()
+        console.log(currentUserRoleOptions)
+        //expect(currentUserRoleOptions,'The options displayed in the User Role Dorpdown do not maatch the expected opntions.').toEqual(expectedRoleOptions)
+        expect(currentUserRoleOptions).toEqual(expectedRoleOptions)
+    })
+
+    test('check user Status options', async({page})=>{
+        const sidepanel = new SidePanel(page)
+        await sidepanel.clickOnOption(SideMenuOption.ADMIN) 
+
+        const expectedRoleOptions = ['-- Select --','Enabled','Disabled']
+        //obtiene el div de selección que se ocultan
+        await page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div").click()
+        //capture todos los options y saque los textos en un arreglo
+        const currentUserstatusOptions = await page.getByRole('listbox').getByRole('option').allInnerTexts()
+        console.log(currentUserstatusOptions)
+        //expect(currentUserstatusOptions,'The options displayed in the User Status Dorpdown do not maatch the expected opntions.').toEqual(expectedRoleOptions)
+        expect(currentUserstatusOptions).toEqual(expectedRoleOptions)
     })
 
     test('Get all the usernames registered', async ({ page }) => {
