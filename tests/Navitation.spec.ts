@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pageobjects/LoginPage'
 import { SideMenuOption, SidePanel } from '../components/SidePanel'
+import { TopBarMenu } from '../components/top-bar-menu/TopBarMenu'
 
 test.describe("Validation of navigation options", () => {
     test.beforeEach(async ({ page }) => {
@@ -131,6 +132,47 @@ test.describe("Validation of navigation options", () => {
             await expect(page).toHaveURL(new RegExp(expectedPage.url)) //verifica que la página tenga en su URL el path esperado
             await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('Job').click()//Da click porque al cargar, se cierran las opciones del TopBar menu
         }
+
+    })
+
+     test('Testing topbar menu User Management - Jobs', async({page})=>{
+        //utilizando los componentes
+        const sidePanel= new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+        const topBarMenu = new TopBarMenu(page)
+        //Menu user management
+        await topBarMenu.userManagement.clickOnUsers()
+        //Menu Job
+        await topBarMenu.job.clickOnJobTitles()
+        await topBarMenu.job.clickOnJobTitles()
+        await topBarMenu.job.clickOnEmploymentStatus()
+        await topBarMenu.job.clickOnJobCategories()
+        await topBarMenu.job.clickOnWorkShifts()
+    })
+
+    test('Testing topbar menu Organization', async({page})=>{
+        //utilizando los componentes
+        const sidePanel= new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+        const topBarMenu = new TopBarMenu(page)
+        //Organization
+        await topBarMenu.organization.clickOnGeneralInformation()
+        await topBarMenu.organization.clickOnLocations()
+        await topBarMenu.organization.clickOnStructure()
+       
+    })
+
+    test('Testing topbar menu Qualification', async({page})=>{
+        //utilizando los componentes
+        const sidePanel= new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+        const topBarMenu = new TopBarMenu(page)
+        //Qualifications
+        await topBarMenu.qualifications.clickOnSkills()
+        await topBarMenu.qualifications.clickOnLanguages()
+        await topBarMenu.qualifications.clickOnLicenses()
+        await topBarMenu.qualifications.clickOnMemberships()
+        await topBarMenu.qualifications.clickOnEducation()
 
     })
 
