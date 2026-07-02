@@ -162,4 +162,38 @@ test.describe("Get data from table", () => {
             .toHaveValue(userForEdition)
     })
 
+
+    test('Filter by admin', async({page})=>{
+        const sidepanel = new SidePanel(page)
+        await sidepanel.clickOnOption(SideMenuOption.ADMIN) 
+
+        //Detectar la tabla y tomar las filas
+        const allBodyRows = page.getByRole('table').getByRole('rowgroup').nth(1).getByRole('row') //Identifica la tabla y las filas omitiendo el titulo
+
+        //filtro las filas en codigo
+        const currentAdminRows = allBodyRows.filter({
+            has: page.getByRole('cell').nth(2).getByText('Admin')//siendo muy especificos que es la columna 3
+        })
+
+        const expectedAdminCount = await currentAdminRows.count()
+        console.log('Admin users before filtering: ', expectedAdminCount)
+
+        //aplicar filtro
+        //obtiene el div de selección que se ocultan
+        await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div").click()
+        //selecciona la opción Admin
+        await page.getByRole('listbox').getByRole('option',{name:'Admin'}).click()
+        //click en buscar
+        await page.getByRole('button',{name:'Search'}).click()
+
+        //La tabla filtrada debería tener exactamente la misma cantidad que encontramos antes por codigo
+        await expect(allBodyRows).toHaveCount(expectedAdminCount)
+
+        for (let i=0; i<expectedAdminCount; i++){
+            await expect(allBodyRows.nth(i).getByRole('cell').nth(2)).toContainText('Admin')
+        }
+         
+    
+    })
+
 })
